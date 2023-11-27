@@ -124,7 +124,7 @@ def send_logs_to_telegram(message):
                 if SERVER_NAME:
                     txt_s = str("<b>" + SERVER_NAME + "</b>\n-------\n" + str(txt_s))
                 send_data = {
-                    "chat_id": int(CHAT_ID),
+                    "chat_id": int(chat),
                     "text": txt_s,
                     "parse_mode": "HTML",
                 }
