@@ -55,7 +55,7 @@ def read_config():
     LIMIT_NUMBER = int(LOAD_CONFIG_JSON["LIMIT_NUMBER"])
     LOG_FILE_NAME = str(LOAD_CONFIG_JSON["LOG_FILE_NAME"])
     TELEGRAM_BOT_URL = str(LOAD_CONFIG_JSON["TELEGRAM_BOT_URL"])
-    CHAT_ID = int(LOAD_CONFIG_JSON["CHAT_ID"])
+    CHAT_ID = list(LOAD_CONFIG_JSON["CHAT_ID"])
     EXCEPT_USERS = LOAD_CONFIG_JSON["EXCEPT_USERS"]
     PANEL_USERNAME = str(LOAD_CONFIG_JSON["PANEL_USERNAME"])
     PANEL_PASSWORD = str(LOAD_CONFIG_JSON["PANEL_PASSWORD"])
@@ -118,23 +118,24 @@ def send_logs_to_telegram(message):
             shorter_messages = [
                 "]".join(messages[i : i + 100]) for i in range(0, len(messages), 100)
             ]
-        for message in shorter_messages:
-            txt_s = str(message.strip())
-            if SERVER_NAME:
-                txt_s = str("<b>" + SERVER_NAME + "</b>\n-------\n" + str(txt_s))
-            send_data = {
-                "chat_id": CHAT_ID,
-                "text": txt_s,
-                "parse_mode": "HTML",
-            }
-            try:
-                response = requests.post(TELEGRAM_BOT_URL, data=send_data)
-            except Exception as ex:
-                print(ex)
-                time.sleep(15)
-                response = requests.post(TELEGRAM_BOT_URL, data=send_data)
-                if response.status_code != 200:
-                    print("Failed to send Telegram message")
+        for chat in CHAT_ID:
+            for message in shorter_messages:
+                txt_s = str(message.strip())
+                if SERVER_NAME:
+                    txt_s = str("<b>" + SERVER_NAME + "</b>\n-------\n" + str(txt_s))
+                send_data = {
+                    "chat_id": int(CHAT_ID),
+                    "text": txt_s,
+                    "parse_mode": "HTML",
+                }
+                try:
+                    response = requests.post(TELEGRAM_BOT_URL, data=send_data)
+                except Exception as ex:
+                    print(ex)
+                    time.sleep(15)
+                    response = requests.post(TELEGRAM_BOT_URL, data=send_data)
+                    if response.status_code != 200:
+                        print("Failed to send Telegram message")
 
 
 def write_log(log_info):
