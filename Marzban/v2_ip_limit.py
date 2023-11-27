@@ -32,15 +32,20 @@ DATE_TIME_ZONE = "Iran"
 def read_config():
     """read the v2iplimit_config.json file"""
     LOAD_CONFIG_JSON = "v2iplimit_config.json"
-    try:
-        with open(LOAD_CONFIG_JSON, "r") as CONFIG_FILE:
+    for i in range(10):
+        try:
+            CONFIG_FILE = open(LOAD_CONFIG_JSON, "r")
             LOAD_CONFIG_JSON = json.loads(CONFIG_FILE.read())
-    except Exception as ex:
-        print(ex)
-        print(
-            "Unable to Locate v2iplimit_config.json File Or Invalid JSON Syntax in Config File"
-        )
-        exit()
+            CONFIG_FILE.close()
+            break
+        except Exception as ex:
+            print(ex)
+            print(
+                "Unable to Locate v2iplimit_config.json File Or Invalid JSON Syntax in Config File"
+            )
+            time.sleep(10)
+            if i >= 9:
+                exit()
     global WRITE_LOGS_TF, SEND_LOGS_TO_TEL, LIMIT_NUMBER, INACTIVE_DURATION
     global LOG_FILE_NAME, TELEGRAM_BOT_URL, CHAT_ID, SPECIAL_LIMIT_USERS
     global EXCEPT_USERS, PANEL_USERNAME, PANEL_PASSWORD, PRETTY_PRINT
